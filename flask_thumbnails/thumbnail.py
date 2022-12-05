@@ -2,7 +2,7 @@ import os
 from io import BytesIO
 
 try:
-    from PIL import Image, ImageOps
+    from PIL import Image, ImageOps, ImageFile
 except ImportError:
     raise RuntimeError(  # pylint: disable=raise-missing-from
         "Get Pillow at https://pypi.python.org/pypi/Pillow or run command 'pip install pillow'."
@@ -116,9 +116,11 @@ class Thumbnail:
         options["format"] = options.get("format", image.format)
 
         image = self._create_thumbnail(image, thumbnail_size, crop, background=background)
+        ImageFile.MAXBLOCK = 2**20  # there are some images with exif blocks > 64kB
+        origInfo = image.info
 
         raw_data = self.get_raw_data(image, **options)
-        storage.save(thumbnail_filepath, raw_data)
+        storage.save(thumbnail_filepath, raw_data, exif=origInfo.exit)
 
         return thumbnail_url
 
