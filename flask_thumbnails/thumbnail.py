@@ -117,10 +117,10 @@ class Thumbnail:
 
         image = self._create_thumbnail(image, thumbnail_size, crop, background=background)
         ImageFile.MAXBLOCK = 2**20  # there are some images with exif blocks > 64kB
-        origInfo = image.info
+        options["exif"] = image.info["exif"]
 
         raw_data = self.get_raw_data(image, **options)
-        storage.save(thumbnail_filepath, raw_data, exif=origInfo["exif"])
+        storage.save(thumbnail_filepath, raw_data)
 
         return thumbnail_url
 
@@ -128,6 +128,7 @@ class Thumbnail:
         data = {
             "format": self._get_format(image, **options),
             "quality": options.get("quality", 90),
+            "exif": options.get("exif", None),
         }
 
         _file = BytesIO()
