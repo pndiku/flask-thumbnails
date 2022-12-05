@@ -120,7 +120,7 @@ class Thumbnail:
         origInfo = image.info
 
         raw_data = self.get_raw_data(image, **options)
-        storage.save(thumbnail_filepath, raw_data, exif=origInfo.exit)
+        storage.save(thumbnail_filepath, raw_data, exif=origInfo.exif)
 
         return thumbnail_url
 
