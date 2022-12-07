@@ -128,8 +128,9 @@ class Thumbnail:
         data = {
             "format": self._get_format(image, **options),
             "quality": options.get("quality", 90),
-            "exif": options.get("exif", None),
         }
+        if options["exif"]:
+            data["exif"] = options["exif"]
 
         _file = BytesIO()
         image.save(_file, **data)
