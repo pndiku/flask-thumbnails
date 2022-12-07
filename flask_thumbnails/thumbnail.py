@@ -117,7 +117,7 @@ class Thumbnail:
 
         image = self._create_thumbnail(image, thumbnail_size, crop, background=background)
         ImageFile.MAXBLOCK = 2**20  # there are some images with exif blocks > 64kB
-        options["exif"] = image.info["exif"]
+        options["exif"] = image.info.get("exif", None)
 
         raw_data = self.get_raw_data(image, **options)
         storage.save(thumbnail_filepath, raw_data)
